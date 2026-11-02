@@ -9,7 +9,7 @@
       --bg-color: #f2f2f7;
       --card-bg: #ffffff;
       --accent-blue: #007aff;
-      --ghost-color: #8e8e93;
+      --ghost-color: #34c759;
       --text-main: #000000;
     }
 
@@ -24,7 +24,6 @@
       padding: 20px;
     }
 
-    /* 아이폰 프레임 */
     .iphone {
       width: 375px;
       height: 760px;
@@ -37,7 +36,6 @@
       flex-direction: column;
     }
 
-    /* 다이내믹 아일랜드 & 상단바 */
     .status-bar {
       height: 48px;
       padding: 0 24px;
@@ -59,18 +57,19 @@
       transform: translateX(-50%);
     }
 
-    /* 메인 컨텐츠 영역 */
     .screen {
       flex: 1;
       position: relative;
       background-color: var(--bg-color);
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
 
-    .app-screen { display: none; height: 100%; padding: 16px; }
-    .app-screen.active { display: block; }
+    .app-screen { display: none; height: 100%; padding: 16px; flex-direction: column; }
+    .app-screen.active { display: flex; }
 
-    /* 홈화면 아이콘 grid */
+    /* 홈화면 */
     .home-screen {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -97,29 +96,37 @@
     }
     .app-name { font-size: 11px; color: #333; text-align: center; }
 
-    /* 아이콘 색상 */
     .icon-messages { background: linear-gradient(180deg, #34c759, #30d158); }
     .icon-photos { background: linear-gradient(180deg, #ff9500, #ff3b30); }
     .icon-notes { background: linear-gradient(180deg, #ffcc00, #ff9500); }
 
-    /* iMessage 스타일 */
+    /* iMessage 미연시 채팅 UI */
     .chat-header {
       text-align: center;
-      padding: 10px 0 16px;
+      padding: 6px 0 12px;
       border-bottom: 1px solid #e5e5ea;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
+      background: #fff;
     }
-    .chat-avatar { width: 48px; height: 48px; background: #e5e5ea; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
-    .chat-name { font-size: 14px; font-weight: 600; }
-    .chat-status { font-size: 11px; color: #8e8e93; }
+    .chat-avatar { width: 44px; height: 44px; background: #f2f2f7; border-radius: 50%; margin: 0 auto 4px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .chat-name { font-size: 13px; font-weight: 600; }
+    .chat-status { font-size: 10px; color: #8e8e93; }
 
-    .message-list { display: flex; flex-direction: column; gap: 8px; }
+    .message-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 10px;
+    }
     .bubble {
-      max-width: 75%;
+      max-width: 80%;
       padding: 10px 14px;
       border-radius: 18px;
-      font-size: 14px;
+      font-size: 13px;
       line-height: 1.4;
+      word-break: break-all;
     }
     .bubble.me {
       align-self: flex-end;
@@ -134,17 +141,51 @@
       border-bottom-left-radius: 4px;
     }
 
-    /* 메모장 스타일 */
-    .note-card {
+    /* 선택지 버튼 */
+    .choice-area {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding-top: 10px;
+      border-top: 1px solid #e5e5ea;
+    }
+    .choice-btn {
+      background: #ffffff;
+      border: 1.5px solid var(--accent-blue);
+      color: var(--accent-blue);
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .choice-btn:hover {
+      background: var(--accent-blue);
+      color: white;
+    }
+
+    /* 메모장 & 앨범 카드 */
+    .card-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+    .card {
       background: white;
       border-radius: 12px;
       padding: 14px;
-      margin-bottom: 10px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .note-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
-    .note-date { font-size: 11px; color: #8e8e93; margin-bottom: 8px; }
-    .note-body { font-size: 13px; color: #3c3c43; white-space: pre-line; line-height: 1.5; }
+    .card-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #000; }
+    .card-date { font-size: 11px; color: #8e8e93; margin-bottom: 8px; }
+    .card-body { font-size: 12px; color: #3c3c43; white-space: pre-line; line-height: 1.5; }
+
+    .photo-frame {
+      width: 100%;
+      height: 130px;
+      background-size: cover;
+      background-position: center;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
 
     /* 하단 홈 바 */
     .home-bar-area {
@@ -153,6 +194,7 @@
       justify-content: center;
       align-items: center;
       cursor: pointer;
+      background: white;
     }
     .home-bar {
       width: 134px;
@@ -193,51 +235,66 @@
         </div>
       </div>
 
-      <!-- 2. 메시지 앱 (최낭자 혼령과의 대화) -->
+      <!-- 2. 메시지 앱 (미연시 챗) -->
       <div id="messages" class="app-screen">
         <div class="chat-header">
           <div class="chat-avatar">🌸</div>
           <div class="chat-name">최낭자 (최씨 처자)</div>
-          <div class="chat-status">달빛 아래 접속 중</div>
+          <div class="chat-status">달빛 아래 접속 중...</div>
         </div>
-        <div class="message-list">
+        
+        <div class="message-list" id="chatList">
           <div class="bubble ghost">낭군님, 밤이 깊었는데 아직 잠들지 못하셨나요?</div>
-          <div class="bubble me">그대를 향한 그리움에 눈을 감을 수 없소.</div>
-          <div class="bubble ghost">비록 죽음이 우리를 갈라놓았으나, 제 혼령은 늘 낭군님의 곁을 거닐고 있답니다...</div>
+        </div>
+
+        <div class="choice-area" id="choiceArea">
+          <button class="choice-btn" onclick="makeChoice(1, '그대를 향한 그리움에 잠을 이룰 수 없소.')">그대를 향한 그리움에 잠을 이룰 수 없소.</button>
+          <button class="choice-btn" onclick="makeChoice(2, '당신이 정말 혼령이 되어 돌아온 것이오?')">당신이 정말 혼령이 되어 돌아온 것이오?</button>
         </div>
       </div>
 
       <!-- 3. 사진 앨범 앱 -->
       <div id="photos" class="app-screen">
-        <h2 style="font-size: 20px; margin-bottom: 12px;">추억 앨범</h2>
-        <div class="note-card">
-          <div class="note-title">🌸 담장 너머의 첫 만남</div>
-          <div class="note-date">조선 세종 해</div>
-          <p style="font-size:12px; color:#666;">담장 너머로 시를 주고받으며 서로의 마음을 확인했던 소중한 날.</p>
-        </div>
-        <div class="note-card">
-          <div class="note-title">🌙 환생한 최씨와의 재회</div>
-          <div class="note-date">비극 이후의 어느 밤</div>
-          <p style="font-size:12px; color:#666;">은은한 달빛 아래, 혼령이 되어 찾아온 당신을 다시 안았던 순간.</p>
+        <h2 style="font-size: 18px; margin-bottom: 10px;">추억 앨범</h2>
+        <div class="card-list">
+          <div class="card">
+            <div class="photo-frame" style="background-image: url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=400');"></div>
+            <div class="card-title">🌸 담장 너머의 첫 만남</div>
+            <div class="card-date">개성 송도 담장 밑</div>
+            <div class="card-body">담장 안으로 글을 넘기며 그대와 처음 마음을 주고받았던 그날...</div>
+          </div>
+          <div class="card">
+            <div class="photo-frame" style="background-image: url('https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=400');"></div>
+            <div class="card-title">🌙 환생한 최씨와의 재회</div>
+            <div class="card-date">비극 이후의 어느 밤</div>
+            <div class="card-body">홍건적의 난으로 이별했으나, 죽음을 넘어 내 곁으로 돌아와 준 소중한 당신.</div>
+          </div>
         </div>
       </div>
 
       <!-- 4. 메모장 앱 (시 & 일기) -->
       <div id="notes" class="app-screen">
-        <h2 style="font-size: 20px; margin-bottom: 12px;">메모</h2>
-        <div class="note-card">
-          <div class="note-title">담장을 넘겨준 글 (贈詩)</div>
-          <div class="note-date">이생이 쓴 시</div>
-          <div class="note-body">담장 안의 봄빛을 엿보았더니
+        <h2 style="font-size: 18px; margin-bottom: 10px;">이생의 메모장</h2>
+        <div class="card-list">
+          <div class="card">
+            <div class="card-title">📜 담장을 넘겨준 글 (贈詩)</div>
+            <div class="card-date">이생이 최 처자에게 바친 시</div>
+            <div class="card-body">담장 안의 봄빛을 엿보았더니
 선녀 같은 그대의 모습 그리워라.
 어찌하면 담을 넘어 들어가
 그대 손을 잡을 수 있으리.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">📖 홀로 남겨진 밤의 일기</div>
+            <div class="card-date">최씨가 세상을 떠난 후</div>
+            <div class="card-body">사랑하는 이를 잃고 세상에 홀로 남겨진 삶이 무슨 의미가 있으랴. 매일 밤 달빛을 보며 그대의 온기를 그리워한다...</div>
+          </div>
         </div>
       </div>
 
     </div>
 
-    <!-- 하단 홈 바 (터치 시 홈으로 이동) -->
+    <!-- 하단 홈 바 -->
     <div class="home-bar-area" onclick="goHome()">
       <div class="home-bar"></div>
     </div>
@@ -252,6 +309,45 @@
     function goHome() {
       document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
       document.getElementById('home').classList.add('active');
+    }
+
+    /* 미연시 스토리 진행 로직 */
+    let step = 1;
+
+    function makeChoice(choiceNum, text) {
+      const chatList = document.getElementById('chatList');
+      const choiceArea = document.getElementById('choiceArea');
+
+      // 내 답변 추가
+      chatList.innerHTML += `<div class="bubble me">${text}</div>`;
+      chatList.scrollTop = chatList.scrollHeight;
+
+      // 단계별 진행
+      if (step === 1) {
+        setTimeout(() => {
+          if (choiceNum === 1) {
+            chatList.innerHTML += `<div class="bubble ghost">저 역시 낭군님을 잊지 못해 이렇게 저승의 법도를 어기고 찾아왔답니다...</div>`;
+          } else {
+            chatList.innerHTML += `<div class="bubble ghost">비록 육신은 사라졌으나, 제 사랑은 죽지 않고 낭군님 곁으로 돌아왔습니다.</div>`;
+          }
+          chatList.scrollTop = chatList.scrollHeight;
+
+          // 다음 선택지
+          choiceArea.innerHTML = `
+            <button class="choice-btn" onclick="makeChoice(1, '우리 다시는 헤어지지 말고 평생 함께합시다.')">우리 다시는 헤어지지 말고 평생 함께합시다.</button>
+            <button class="choice-btn" onclick="makeChoice(2, '이것이 꿈인가 생시인가 모르겠소...')">이것이 꿈인가 생시인가 모르겠소...</button>
+          `;
+          step = 2;
+        }, 800);
+      } else if (step === 2) {
+        setTimeout(() => {
+          chatList.innerHTML += `<div class="bubble ghost">낭군님... 비록 지금은 함께하지만, 저승의 인연은 기한이 있는 법입니다. 하지만 지금 이 순간만큼은 오직 둘만의 시간이에요.</div>`;
+          chatList.scrollTop = chatList.scrollHeight;
+
+          // 엔딩
+          choiceArea.innerHTML = `<div style="text-align:center; font-size:12px; color:#8e8e93; padding:10px;">[엔딩: 시공을 초월한 사랑]</div>`;
+        }, 800);
+      }
     }
   </script>
 </body>
