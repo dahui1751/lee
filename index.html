@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이생의 아이폰 - 이생규장전</title>
+  <style>
+    :root {
+      --bg-color: #f2f2f7;
+      --card-bg: #ffffff;
+      --accent-blue: #007aff;
+      --ghost-color: #8e8e93;
+      --text-main: #000000;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Apple SD Gothic Neo", sans-serif; }
+    
+    body {
+      background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* 아이폰 프레임 */
+    .iphone {
+      width: 375px;
+      height: 760px;
+      background-color: #ffffff;
+      border-radius: 50px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.15), 0 0 0 12px #1c1c1e;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 다이내믹 아일랜드 & 상단바 */
+    .status-bar {
+      height: 48px;
+      padding: 0 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      font-weight: 600;
+      z-index: 100;
+    }
+    .dynamic-island {
+      width: 110px;
+      height: 28px;
+      background-color: #000000;
+      border-radius: 20px;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* 메인 컨텐츠 영역 */
+    .screen {
+      flex: 1;
+      position: relative;
+      background-color: var(--bg-color);
+      overflow-y: auto;
+    }
+
+    .app-screen { display: none; height: 100%; padding: 16px; }
+    .app-screen.active { display: block; }
+
+    /* 홈화면 아이콘 grid */
+    .home-screen {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px 16px;
+      padding: 30px 20px;
+    }
+    .app-icon {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    .icon-box {
+      width: 60px;
+      height: 60px;
+      border-radius: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 28px;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-bottom: 6px;
+    }
+    .app-name { font-size: 11px; color: #333; text-align: center; }
+
+    /* 아이콘 색상 */
+    .icon-messages { background: linear-gradient(180deg, #34c759, #30d158); }
+    .icon-photos { background: linear-gradient(180deg, #ff9500, #ff3b30); }
+    .icon-notes { background: linear-gradient(180deg, #ffcc00, #ff9500); }
+
+    /* iMessage 스타일 */
+    .chat-header {
+      text-align: center;
+      padding: 10px 0 16px;
+      border-bottom: 1px solid #e5e5ea;
+      margin-bottom: 12px;
+    }
+    .chat-avatar { width: 48px; height: 48px; background: #e5e5ea; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+    .chat-name { font-size: 14px; font-weight: 600; }
+    .chat-status { font-size: 11px; color: #8e8e93; }
+
+    .message-list { display: flex; flex-direction: column; gap: 8px; }
+    .bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+    }
+    .bubble.me {
+      align-self: flex-end;
+      background-color: var(--accent-blue);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .bubble.ghost {
+      align-self: flex-start;
+      background-color: #e9e9eb;
+      color: #000;
+      border-bottom-left-radius: 4px;
+    }
+
+    /* 메모장 스타일 */
+    .note-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .note-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .note-date { font-size: 11px; color: #8e8e93; margin-bottom: 8px; }
+    .note-body { font-size: 13px; color: #3c3c43; white-space: pre-line; line-height: 1.5; }
+
+    /* 하단 홈 바 */
+    .home-bar-area {
+      height: 34px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    .home-bar {
+      width: 134px;
+      height: 5px;
+      background-color: #000000;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="iphone">
+    <!-- 상단바 -->
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="dynamic-island"></div>
+      <span>5G 🔋</span>
+    </div>
+
+    <!-- 스크린 화면 -->
+    <div class="screen">
+      
+      <!-- 1. 홈 화면 -->
+      <div id="home" class="app-screen active">
+        <div class="home-screen">
+          <div class="app-icon" onclick="openApp('messages')">
+            <div class="icon-box icon-messages">💬</div>
+            <span class="app-name">메시지</span>
+          </div>
+          <div class="app-icon" onclick="openApp('photos')">
+            <div class="icon-box icon-photos">🖼️</div>
+            <span class="app-name">사진</span>
+          </div>
+          <div class="app-icon" onclick="openApp('notes')">
+            <div class="icon-box icon-notes">📝</div>
+            <span class="app-name">메모</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. 메시지 앱 (최낭자 혼령과의 대화) -->
+      <div id="messages" class="app-screen">
+        <div class="chat-header">
+          <div class="chat-avatar">🌸</div>
+          <div class="chat-name">최낭자 (최씨 처자)</div>
+          <div class="chat-status">달빛 아래 접속 중</div>
+        </div>
+        <div class="message-list">
+          <div class="bubble ghost">낭군님, 밤이 깊었는데 아직 잠들지 못하셨나요?</div>
+          <div class="bubble me">그대를 향한 그리움에 눈을 감을 수 없소.</div>
+          <div class="bubble ghost">비록 죽음이 우리를 갈라놓았으나, 제 혼령은 늘 낭군님의 곁을 거닐고 있답니다...</div>
+        </div>
+      </div>
+
+      <!-- 3. 사진 앨범 앱 -->
+      <div id="photos" class="app-screen">
+        <h2 style="font-size: 20px; margin-bottom: 12px;">추억 앨범</h2>
+        <div class="note-card">
+          <div class="note-title">🌸 담장 너머의 첫 만남</div>
+          <div class="note-date">조선 세종 해</div>
+          <p style="font-size:12px; color:#666;">담장 너머로 시를 주고받으며 서로의 마음을 확인했던 소중한 날.</p>
+        </div>
+        <div class="note-card">
+          <div class="note-title">🌙 환생한 최씨와의 재회</div>
+          <div class="note-date">비극 이후의 어느 밤</div>
+          <p style="font-size:12px; color:#666;">은은한 달빛 아래, 혼령이 되어 찾아온 당신을 다시 안았던 순간.</p>
+        </div>
+      </div>
+
+      <!-- 4. 메모장 앱 (시 & 일기) -->
+      <div id="notes" class="app-screen">
+        <h2 style="font-size: 20px; margin-bottom: 12px;">메모</h2>
+        <div class="note-card">
+          <div class="note-title">담장을 넘겨준 글 (贈詩)</div>
+          <div class="note-date">이생이 쓴 시</div>
+          <div class="note-body">담장 안의 봄빛을 엿보았더니
+선녀 같은 그대의 모습 그리워라.
+어찌하면 담을 넘어 들어가
+그대 손을 잡을 수 있으리.</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 하단 홈 바 (터치 시 홈으로 이동) -->
+    <div class="home-bar-area" onclick="goHome()">
+      <div class="home-bar"></div>
+    </div>
+  </div>
+
+  <script>
+    function openApp(appId) {
+      document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
+      document.getElementById(appId).classList.add('active');
+    }
+
+    function goHome() {
+      document.querySelectorAll('.app-screen').forEach(el => el.classList.remove('active'));
+      document.getElementById('home').classList.add('active');
+    }
+  </script>
+</body>
+</html>
